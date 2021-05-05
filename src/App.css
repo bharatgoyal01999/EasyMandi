@@ -1,38 +1,216 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+div {
   display: flex;
-  flex-direction: column;
+}
+
+.navButton {
+  cursor: pointer;
+  color: azure;
+  text-decoration: none;
+  font-size: larger;
+}
+
+.navButton:active {
+  text-decoration: underline;
+  text-decoration-color: azure;
+}
+
+.navButton:visited {
+  text-decoration: none;
+  text-decoration-color: azure;
+}
+
+div.nav {
+  flex: 0.1;
+  background-color: #2f5233;
+  padding: 0.5%;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+span {
+  display: flex;
+}
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(20, 71, 4);
+  border: 1px solid white;
+  width: 8px;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2f5233;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2f5233;
+  width: 6px;
+  border-radius: 8px;
+}
+
+div.phoneNav {
+  display: none;
+}
+
+div.auth {
+  background: #2f5233;
   color: white;
+
+  border-radius: 10px;
+  align-self: center;
+  justify-self: center;
+  flex: 1;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+/* @media only screen and ( max-width:40px) {
+ div.nav{
+   display: none;
+
+ } 
+ div.phoneNav{
+ flex:0.1;
+   background-color: #2F5233;
+   padding: 0.5%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+ }
+} */
+
+div.contentContainer {
+  flex: 0.9;
+  flex-direction: column-reverse;
 }
 
-.App-link {
-  color: #61dafb;
+div.cardContainer {
+  box-shadow: 1px 5px 2px rgba(0, 0, 0, 0.3);
+  background-color: #e3f0e3;
+  border-radius: 10px;
+  flex-direction: column;
+  padding: 0.2em;
+}
+div.cardContainer:hover {
+  box-shadow: 1px 5px 0px rgba(0, 0, 0, 0.3);
+}
+.cardImage {
+  width: 8em;
+  height: 8em;
+  border-radius: 5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+div.cardTop {
+  flex: 0.7;
+  flex-direction: column;
+}
+div.cardBottom {
+  margin-top: 1em;
+  flex: 0.3;
+  flex-direction: column;
+}
+
+.cardTitle {
+  color: rgb(2, 43, 2);
+  font-size: 1.5em;
+}
+.cardDisc {
+  color: #124418;
+}
+.cardRight {
+  flex-direction: column;
+  padding-left: 0.2em;
+}
+.cardTop > span {
+  font-size: 1.2em;
+  color: #618868;
+}
+.timerText {
+  color: rgb(39, 75, 16);
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+}
+.timerContainer {
+  margin-top: 0.1em;
+  flex-direction: column;
+}
+
+.customiseCard {
+  margin-right: 7em;
+}
+
+div.formContainer {
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+  background-color: #e3f0e3;
+}
+
+div.eventContainer {
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 1em;
+}
+
+div.form {
+  width: 99vw;
+
+  flex-direction: column;
+  justify-content: space-between;
+}
+.inputField {
+  margin: 0px 20px;
+}
+
+@media (max-width: 480px) {
+  div.content {
+    width: 100%;
+    height: 100%;
+    display: grid;
+
+    grid-template-columns: auto;
   }
-  to {
-    transform: rotate(360deg);
+}
+
+/* Media Query for low resolution  Tablets, Ipads */
+@media (min-width: 481px) and (max-width: 767px) {
+  body {
+    width: 100%;
+    display: grid;
+
+    grid-row-gap: 5%;
+    grid-template-columns: auto auto;
+  }
+}
+
+/* Media Query for Tablets Ipads portrait mode */
+@media (min-width: 768px) and (max-width: 1024px) {
+  div.content {
+    width: 100%;
+    display: grid;
+
+    grid-template-columns: auto auto;
+  }
+}
+
+/* Media Query for Laptops and Desktops */
+@media (min-width: 1025px) and (max-width: 1280px) {
+  div.content {
+    width: 100%;
+    display: grid;
+    flex-direction: column-reverse;
+    grid-template-columns: auto auto;
+  }
+}
+
+/* Media Query for Large screens */
+@media (min-width: 1281px) {
+  div.content {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: auto auto;
   }
 }
