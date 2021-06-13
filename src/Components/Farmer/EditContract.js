@@ -66,6 +66,11 @@ export default function Edit(props) {
             type: "string",
           },
           {
+            internalType: "string",
+            name: "fuid",
+            type: "string",
+          },
+          {
             internalType: "uint256",
             name: "price",
             type: "uint256",
@@ -104,74 +109,10 @@ export default function Edit(props) {
         type: "event",
       },
       {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: false,
-            internalType: "address",
-            name: "bidder",
-            type: "address",
-          },
-          {
-            indexed: false,
-            internalType: "uint256",
-            name: "amount",
-            type: "uint256",
-          },
-        ],
-        name: "HighestBidIncreased",
-        type: "event",
-      },
-      {
         inputs: [],
-        name: "AskingPrice",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "Checkbalance",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "Description",
-        outputs: [
-          {
-            internalType: "string",
-            name: "",
-            type: "string",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "Farmer",
-        outputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        stateMutability: "view",
+        name: "biddingAcceptAndEnd",
+        outputs: [],
+        stateMutability: "payable",
         type: "function",
       },
       {
@@ -227,6 +168,123 @@ export default function Edit(props) {
         type: "function",
       },
       {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: false,
+            internalType: "address",
+            name: "bidder",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "HighestBidIncreased",
+        type: "event",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "offerPrice",
+            type: "uint256",
+          },
+        ],
+        name: "TraderMakeOffer",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address payable",
+            name: "user",
+            type: "address",
+          },
+        ],
+        name: "TransferMoney",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "withdrawBid",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "AskingPrice",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "Checkbalance",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "Description",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "Farmer",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "Fuid",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
         inputs: [],
         name: "GetCurrentOfferedPrice",
         outputs: [
@@ -260,6 +318,32 @@ export default function Edit(props) {
             internalType: "string",
             name: "",
             type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "highestBid",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "highestBidder",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
           },
         ],
         stateMutability: "view",
@@ -328,72 +412,6 @@ export default function Edit(props) {
           },
         ],
         stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "offerPrice",
-            type: "uint256",
-          },
-        ],
-        name: "TraderMakeOffer",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address payable",
-            name: "user",
-            type: "address",
-          },
-        ],
-        name: "TransferMoney",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "biddingAcceptAndEnd",
-        outputs: [],
-        stateMutability: "payable",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "highestBid",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "highestBidder",
-        outputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "withdrawBid",
-        outputs: [],
-        stateMutability: "nonpayable",
         type: "function",
       },
     ];

@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import Logo from "../Home/Logo.png";
-import { BiMenu } from "react-icons/bi";
-import { SwipeableDrawer } from "@material-ui/core";
 
 export default function Nav() {
   const [showDrawer, toogleDrawer] = useState(false);
@@ -15,15 +13,15 @@ export default function Nav() {
       </div>
       <Link className="navButton" to="/thome">
         {" "}
-        Ongoing{" "}
+        All{" "}
       </Link>
       <Link className="navButton" to="/thome/placed">
         Placed{" "}
       </Link>
 
-      {/* <Link className="navButton" to="/thome/history">
-        History{" "}
-      </Link> */}
+      <Link className="navButton" to="/thome/history">
+        Completed{" "}
+      </Link>
       <span
         className="navButton"
         onClick={() => {

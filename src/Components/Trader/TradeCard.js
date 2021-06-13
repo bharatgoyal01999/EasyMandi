@@ -3,6 +3,7 @@ import Web3 from "web3";
 
 import { BiRupee } from "react-icons/bi";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const Timer = () => {
   const [remainingTime, setReaminingTime] = useState({});
@@ -62,20 +63,23 @@ const Timer = () => {
 };
 
 export default function CropCard({ contractAddress }) {
-  var [HarvestName, setHarvestName] = useState();
-  var [HarvestQuantity, setHarvestQuantity] = useState();
-  var [HarvesDisc, setHarvestDisc] = useState();
+  var [HarvestName, setHarvestName] = useState("");
+  var [HarvestQuantity, setHarvestQuantity] = useState("");
+  var [sellerId, setSellerId] = useState("");
+  var [HarvesDisc, setHarvestDisc] = useState("");
   var [timeLeft, setTimeLeft] = useState("Time is over");
+  var [time, setTime] = useState();
   var [highestBid, setHighestBid] = useState();
-  var [highestBidder, setHighestBidder] = useState();
-  var [quantityUnit, setQuantityUnit] = useState();
-  var [minAmount, setMinAmount] = useState();
+  var [highestBidder, setHighestBidder] = useState("");
+  var [quantityUnit, setQuantityUnit] = useState("");
+  var [minAmount, setMinAmount] = useState("");
   var [disabled, isDisabled] = useState(false);
   var [myOffer, setMyOffer] = useState();
   var [farmer, setFarmer] = useState();
   var [disableMakePayment, setDisableMakePayment] = useState(false);
+  var [disableTransferMonet, setDisableTrasferMoney] = useState(false);
   const [bid, setBid] = useState("");
-  const abi = [
+  var abi = [
     {
       inputs: [
         {
@@ -96,6 +100,11 @@ export default function CropCard({ contractAddress }) {
         {
           internalType: "string",
           name: "startTime",
+          type: "string",
+        },
+        {
+          internalType: "string",
+          name: "fuid",
           type: "string",
         },
         {
@@ -301,6 +310,19 @@ export default function CropCard({ contractAddress }) {
     },
     {
       inputs: [],
+      name: "Fuid",
+      outputs: [
+        {
+          internalType: "string",
+          name: "",
+          type: "string",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
       name: "GetCurrentOfferedPrice",
       outputs: [
         {
@@ -434,10 +456,11 @@ export default function CropCard({ contractAddress }) {
   const makePayment = async () => {
     var value = Number(highestBid);
     const web3 = new Web3("http://127.0.0.1:7545");
-    console.log(highestBid, highestBidder, localStorage.getItem("meta"), value);
+
     var contract = new web3.eth.Contract(abi, contractAddress, {
       from: localStorage.getItem("meta"),
     });
+
     await contract.methods
       .biddingAcceptAndEnd()
       .send({
@@ -447,11 +470,12 @@ export default function CropCard({ contractAddress }) {
       })
       .then((res) => {
         setDisableMakePayment(true);
+        setDisableTrasferMoney(false);
+        window.location.reload();
       });
   };
 
   const transferMoney = async () => {
-    var value = Number(highestBid);
     const web3 = new Web3("http://127.0.0.1:7545");
 
     var contract = new web3.eth.Contract(abi, contractAddress, {
@@ -463,15 +487,46 @@ export default function CropCard({ contractAddress }) {
       .then(async (res) => {
         if (res == Number(highestBid)) {
           console.log(farmer);
-          await contract.methods.TransferMoney(farmer).send();
+          await contract.methods
+            .TransferMoney(farmer)
+            .send()
+            .then((res) => console.log(res))
+            .catch((err) => console.log(err));
           await contract.methods
             .Checkbalance()
             .call()
             .then((res) => {
-              console.log(res);
+              console.log("Inside Check Balance", res);
+              var details = {
+                date: new Date(),
+                Amount: highestBid,
+                Description: HarvesDisc,
+                harvest:
+                  HarvestName + " " + HarvestQuantity + " " + quantityUnit,
+                buyer: localStorage.getItem("uid"),
+                seller: Number(sellerId),
+                address: contractAddress,
+              };
+              axios
+                .post(
+                  "http://13.233.23.103/records/history/",
+                  { ...details },
+                  {
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  }
+                )
+                .then((res) => {
+                  setDisableTrasferMoney(true);
+                  setDisableMakePayment(true);
+                  window.location.reload();
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             });
         }
-        console.log(res);
       });
   };
 
@@ -481,18 +536,40 @@ export default function CropCard({ contractAddress }) {
     var contract = new web3.eth.Contract(abi, contractAddress, {
       from: localStorage.getItem("meta"),
     });
-    contract.methods
+
+    await contract.methods
       .Description()
       .call()
       .then((res) => {
         setHarvestDisc(res);
       });
     await contract.methods
+      .Fuid()
+      .call()
+      .then((res) => {
+        setSellerId(res);
+      });
+
+    await contract.methods
       .Checkbalance()
       .call()
       .then(async (res) => {
         if (res > 0) {
           setDisableMakePayment(true);
+          setDisableTrasferMoney(false);
+        } else {
+          contract.methods
+            .State()
+            .call()
+            .then((res) => {
+              if (res == 2) {
+                setDisableMakePayment(true);
+                setDisableTrasferMoney(true);
+              } else {
+                setDisableMakePayment(false);
+                setDisableTrasferMoney(true);
+              }
+            });
         }
       });
     await contract.methods
@@ -509,13 +586,23 @@ export default function CropCard({ contractAddress }) {
         .GetTimeLeft()
         .call()
         .then((res) => {
-          setTimeLeft(res);
+          setTimeLeft(Number(res));
+
+          var hrs = Math.floor(res / 3600);
+          var minutes = Math.floor((res % 3600) / 60);
+          var seconds = Math.floor((res % 3600) % 60);
+          setTimeLeft(`${hrs}:${minutes}:${seconds}`);
         });
     } catch (e) {
-      console.log("Yes hhhhhhhhhhhh");
-      if ((await localStorage.getItem("meta")) == highestBidder) {
+      if (localStorage.getItem("meta") === highestBidder) {
         setTimeLeft(
-          <div>
+          <div
+            style={{
+              flexDirection: "column",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
+            }}
+          >
             <Button
               variant="contained"
               color="primary"
@@ -524,7 +611,12 @@ export default function CropCard({ contractAddress }) {
             >
               Make Payment
             </Button>
-            <Button variant="contained" color="primary" onClick={transferMoney}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={transferMoney}
+              disabled={disableTransferMonet}
+            >
               Transfer Money to farmer
             </Button>
           </div>
@@ -563,7 +655,6 @@ export default function CropCard({ contractAddress }) {
       .AskingPrice()
       .call()
       .then((res) => {
-        console.log(res);
         var amount = res;
         setMinAmount(amount);
       });
@@ -579,7 +670,7 @@ export default function CropCard({ contractAddress }) {
       .then((res) => {
         setFarmer(res);
       });
-  }, []);
+  }, [highestBidder, highestBid, farmer]);
 
   const placeBid = async () => {
     const web3 = new Web3("http://127.0.0.1:7545");
@@ -630,14 +721,24 @@ export default function CropCard({ contractAddress }) {
                   .call()
                   .then((res) => {
                     if (res) {
-                      setTimeLeft(res);
+                      setTimeLeft(Number(res));
+                      var hrs = Math.floor(res / 3600);
+                      var minutes = Math.floor((res % 3600) / 60);
+                      var seconds = Math.floor((res % 3600) % 60);
+                      setTimeLeft(`${hrs}:${minutes}:${seconds}`);
                     }
                   });
               } catch (err) {
                 if (highestBidder === localStorage.getItem("meta")) {
                   alert("You won this bid now you make payment");
                   setTimeLeft(
-                    <div>
+                    <div
+                      style={{
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        justifyContent: "space-between",
+                      }}
+                    >
                       <Button
                         variant="contained"
                         color="primary"
@@ -673,7 +774,7 @@ export default function CropCard({ contractAddress }) {
             className="cardDisc"
             style={{ marginBottom: "1em", marginTop: "1em" }}
           >
-            {typeof timeLeft === Number ? timeLeft + " sec" : timeLeft}
+            {typeof timeLeft === "number" ? timeLeft + " sec" : timeLeft}
           </span>
 
           <span style={{ marginTop: "1em", color: "rgb(39, 75, 16)" }}>

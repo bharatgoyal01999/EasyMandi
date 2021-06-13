@@ -18,6 +18,7 @@ export default function OverBids() {
             if (item.isTerminated) return item.address;
           });
           var addresses = addresses.map((item) => item.address);
+          console.log(addresses);
           setContracts(addresses);
         }
       })

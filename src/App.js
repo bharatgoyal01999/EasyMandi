@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Home from "./Components/Home/Home";
-import Profile from "./Components/Home/Profile";
+import Thistory from "./Components/Trader/Hostory";
 import Thome from "./Components/Trader/Home";
 import OverBids from "./Components/Farmer/OverBids";
 import Placed from "./Components/Trader/Placed";
@@ -25,6 +25,7 @@ function App() {
         <Route exact path="/thome/placed" component={Placed} />
         <Route exact path="/fhome/blogs" component={Fhome} />
         <Route exact path="/fhome/history" component={OverBids} />
+        <Route exact path="/thome/history" component={Thistory} />
       </Switch>
     </BrowserRouter>
   );

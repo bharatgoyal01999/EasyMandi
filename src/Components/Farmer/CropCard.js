@@ -25,7 +25,6 @@ const Timer = () => {
     setReaminingTime(timeLeft);
   }, [remainingTime]);
 
-  console.log("timer");
   return (
     <div className="timerContainer">
       <div>
@@ -65,7 +64,6 @@ const Timer = () => {
 };
 
 export default function CropCard({ contractAddress }) {
-  console.log(contractAddress);
   var abi = [
     {
       inputs: [
@@ -87,6 +85,11 @@ export default function CropCard({ contractAddress }) {
         {
           internalType: "string",
           name: "startTime",
+          type: "string",
+        },
+        {
+          internalType: "string",
+          name: "fuid",
           type: "string",
         },
         {
@@ -292,6 +295,19 @@ export default function CropCard({ contractAddress }) {
     },
     {
       inputs: [],
+      name: "Fuid",
+      outputs: [
+        {
+          internalType: "string",
+          name: "",
+          type: "string",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
       name: "GetCurrentOfferedPrice",
       outputs: [
         {
@@ -443,6 +459,7 @@ export default function CropCard({ contractAddress }) {
     var contract = new web3.eth.Contract(abi, contractAddress, {
       from: localStorage.getItem("meta"),
     });
+
     contract.methods
       .Description()
       .call()
@@ -458,6 +475,10 @@ export default function CropCard({ contractAddress }) {
         .call()
         .then((res) => {
           setTimeLeft(res);
+          var hrs = Math.floor(res / 3600);
+          var minutes = Math.floor((res % 3600) / 60);
+          var seconds = Math.floor((res % 3600) % 60);
+          setTimeLeft(`${hrs}:${minutes}:${seconds}`);
         });
     } catch (e) {
       await axios.put(
@@ -486,6 +507,17 @@ export default function CropCard({ contractAddress }) {
       .then((res) => {
         if (res > 0) {
           setshowTrader(true);
+        } else {
+          contract.methods
+            .State()
+            .call()
+            .then((res) => {
+              if (res == 2) {
+                setshowTrader(true);
+                setTraderInfo("Congratulation!! money has been transferred");
+              }
+            })
+            .catch((err) => console.log(err));
         }
       });
 
@@ -526,13 +558,9 @@ export default function CropCard({ contractAddress }) {
       .AskingPrice()
       .call()
       .then((res) => {
-        console.log(res);
-
         setMinAmount(res);
       });
   }, []);
-
-  console.log(typeof typeof traderInfo);
 
   return (
     <div className="cardContainer" style={{ margin: "20px 10px" }}>
@@ -555,6 +583,10 @@ export default function CropCard({ contractAddress }) {
                   .call()
                   .then((res) => {
                     setTimeLeft(res);
+                    var hrs = Math.floor(res / 3600);
+                    var minutes = Math.floor((res % 3600) / 60);
+                    var seconds = Math.floor((res % 3600) % 60);
+                    setTimeLeft(`${hrs}:${minutes}:${seconds}`);
                   });
               } catch (e) {
                 setTimeLeft("Time is over");
@@ -572,7 +604,7 @@ export default function CropCard({ contractAddress }) {
             className="cardDisc"
             style={{ marginBottom: "1em", marginTop: "1em" }}
           >
-            {timeLeft === "Time is over" ? timeLeft : timeLeft + " sec"}
+            {timeLeft === "Time is over" ? timeLeft : timeLeft}
           </span>
 
           <span style={{ marginTop: "1em", color: "rgb(39, 75, 16)" }}>
@@ -598,9 +630,6 @@ export default function CropCard({ contractAddress }) {
             onClick={async () => {
               const web3 = new Web3("http://127.0.0.1:7545");
               var address = contractAddress;
-              console.log(address);
-
-              console.log(localStorage.getItem("meta"));
 
               var contract = new web3.eth.Contract(abi, address, {
                 from: localStorage.getItem("meta"),
@@ -610,7 +639,6 @@ export default function CropCard({ contractAddress }) {
                 .FarmerCancelOffer()
                 .send()
                 .then(async (res) => {
-                  console.log(res);
                   await contract.methods
                     .highestBid()
                     .call()
@@ -629,9 +657,6 @@ export default function CropCard({ contractAddress }) {
             onClick={() => {
               const web3 = new Web3("http://127.0.0.1:7545");
               var address = contractAddress;
-              console.log(address);
-
-              console.log(localStorage.getItem("meta"));
 
               var contract = new web3.eth.Contract(abi, address, {
                 from: localStorage.getItem("meta"),

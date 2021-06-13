@@ -6,7 +6,7 @@ import Web3 from "web3";
 
 export default function PlaceBids() {
   const [contractAddress, setContractAddress] = useState([]);
-  const abi = [
+  var abi = [
     {
       inputs: [
         {
@@ -27,6 +27,11 @@ export default function PlaceBids() {
         {
           internalType: "string",
           name: "startTime",
+          type: "string",
+        },
+        {
+          internalType: "string",
+          name: "fuid",
           type: "string",
         },
         {
@@ -232,6 +237,19 @@ export default function PlaceBids() {
     },
     {
       inputs: [],
+      name: "Fuid",
+      outputs: [
+        {
+          internalType: "string",
+          name: "",
+          type: "string",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
       name: "GetCurrentOfferedPrice",
       outputs: [
         {
@@ -361,6 +379,7 @@ export default function PlaceBids() {
       type: "function",
     },
   ];
+
   useEffect(async () => {
     var reqContracts = [];
     await axios
@@ -380,10 +399,11 @@ export default function PlaceBids() {
               if (res > 0) {
                 console.log(res);
                 reqContracts.push(item.address);
-                setContractAddress(reqContracts);
+
                 console.log(contractAddress, "contract address");
               }
             });
+          setContractAddress(reqContracts);
         });
       })
       .catch((err) => console.log(err));

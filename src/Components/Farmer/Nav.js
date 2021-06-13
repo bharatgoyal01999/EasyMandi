@@ -7,6 +7,9 @@ import { SwipeableDrawer } from "@material-ui/core";
 export default function Nav() {
   const [showDrawer, toogleDrawer] = useState(false);
   const [isLogOut, setIsLogout] = useState(false);
+  const [dash, setDash] = useState("underline");
+  const [sell, setSell] = useState("none");
+  const [His, setHis] = useState("none");
 
   return (
     <>
@@ -15,15 +18,52 @@ export default function Nav() {
           <img src={Logo} />
         </div>
         <Link className="navButton" to="/fhome">
-          Current Crops{" "}
+          <span
+            style={{
+              borderBottomColor: "white",
+              textDecorationLine: dash,
+            }}
+            onClick={() => {
+              setDash("underline");
+              setSell("none");
+              setHis("none");
+            }}
+          >
+            DashBoard
+          </span>
         </Link>
         <Link className="navButton" to="/fhome/sellitem">
-          {" "}
-          Sell Item{" "}
+          <span
+            style={{
+              borderBottomColor: "white",
+              textDecorationLine: sell,
+            }}
+            onClick={() => {
+              setDash("none");
+              setSell("underline");
+              setHis("none");
+            }}
+          >
+            {" "}
+            Sell Item{" "}
+          </span>
         </Link>
 
         <Link className="navButton" to="/fhome/history">
-          History{" "}
+          <span
+            style={{
+              borderBottomColor: "white",
+              textDecorationLine: His,
+            }}
+            onClick={() => {
+              setDash("none");
+              setSell("none");
+              setHis("underline");
+            }}
+          >
+            {" "}
+            History{" "}
+          </span>
         </Link>
         <span
           className="navButton"
